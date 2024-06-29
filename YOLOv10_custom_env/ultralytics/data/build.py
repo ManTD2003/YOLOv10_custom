@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from PIL import Image
-from torch.utils.data import dataloader, distributed
+from torch.utils.data import dataloader, distributed, BatchSampler
 
 from ultralytics.data.loaders import (
     LOADERS,
