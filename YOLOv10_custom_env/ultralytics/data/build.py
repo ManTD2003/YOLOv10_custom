@@ -103,6 +103,17 @@ class InfiniteDataLoader(dataloader.DataLoader):
 
     def __init__(self, *args, **kwargs):
         """Dataloader that infinitely recycles workers, inherits from DataLoader."""
+        self.dataset = kwargs.get("dataset")
+
+        if hasattr(self.dataset, "data_type"):
+            kwargs['batch_sampler'] = PositiveNegativeSampler(
+                self.dataset, kwargs["batch_size"], shuffle=kwargs.get("shuffle", True)
+            )
+            kwargs['batch_size'] = 1
+            kwargs['shuffle'] = False
+            kwargs['drop_last'] = False
+            kwargs['sampler'] = None
+
         super().__init__(*args, **kwargs)
         object.__setattr__(self, "batch_sampler", _RepeatSampler(self.batch_sampler))
         self.iterator = super().__iter__()
